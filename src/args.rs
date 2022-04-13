@@ -1,5 +1,5 @@
-use clap::{Args, Parser, Subcommand};
 use crate::commands;
+use clap::{Args, Parser, Subcommand};
 
 /// Pngme CLI
 #[derive(Debug, Parser)]
@@ -8,11 +8,11 @@ use crate::commands;
 #[clap(author, version, about)]
 pub struct Cli {
     #[clap(subcommand)]
-    pub command: Commands,
+    pub command: CliCommand,
 }
 
-#[derive(Debug, Subcommand,)]
-pub enum Commands {
+#[derive(Debug, Subcommand)]
+pub enum CliCommand {
     /// Encodes message in png file
     #[clap(arg_required_else_help = true)]
     Encode {
@@ -44,6 +44,6 @@ pub enum Commands {
     #[clap(arg_required_else_help = true)]
     Print {
         #[clap(required = true)]
-        file_path: String
+        file_path: String,
     },
 }

@@ -1,19 +1,19 @@
 // Implementation of Chunk Type section of PNG spec[http://www.libpng.org/pub/png/spec/1.2/PNG-Structure.html]
-use std::fmt;
-use std::fmt::Display;
-use std::{str::FromStr};
-use std::str::from_utf8;
 use std::convert::TryInto;
 use std::error::Error;
+use std::fmt;
+use std::fmt::Display;
+use std::str::from_utf8;
+use std::str::FromStr;
 
 #[derive(PartialEq, Debug, Clone)]
 pub struct ChunkType {
-    bytes: [u8; 4]
+    bytes: [u8; 4],
 }
 
 #[derive(Debug)]
 pub enum ChunkTypeErr {
-    InvalidArgs
+    InvalidArgs,
 }
 
 impl Display for ChunkTypeErr {
@@ -25,7 +25,7 @@ impl Display for ChunkTypeErr {
 impl Error for ChunkTypeErr {}
 
 impl ChunkType {
-    // @notice ChunkType constructor 
+    // @notice ChunkType constructor
     // @param _bytes Bytes of ChunkType
     pub fn new(_bytes: &[u8; 4]) -> ChunkType {
         ChunkType { bytes: *_bytes }
@@ -61,11 +61,10 @@ impl ChunkType {
         self.bytes[3].is_ascii_lowercase()
     }
 
-    // @notice: Returns String representation of ChunkType
+    // // @notice: Returns String representation of ChunkType
     pub fn to_string(&self) -> String {
         String::from(from_utf8(&self.bytes).unwrap())
     }
-
 }
 
 // @notice: Constructs a ChunkType instance from a 4 byte Array
@@ -85,26 +84,26 @@ impl FromStr for ChunkType {
         if s.chars().count() != 4 {
             return Err(ChunkTypeErr::InvalidArgs);
         } else {
-            let temp = ChunkType { bytes: s.as_bytes().try_into().unwrap() };
+            let temp = ChunkType {
+                bytes: s.as_bytes().try_into().unwrap(),
+            };
             match temp.bytes.iter().all(|c| c.is_ascii_alphabetic()) {
                 true => Ok(temp),
-                _    => Err(ChunkTypeErr::InvalidArgs)
+                _ => Err(ChunkTypeErr::InvalidArgs),
             }
         }
     }
 }
 
 impl fmt::Display for ChunkType {
-
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{} {} {} {}"
-            , self.bytes[0]
-            , self.bytes[1]
-            , self.bytes[2]
-            , self.bytes[3])
+        write!(
+            f,
+            "{} {} {} {}",
+            self.bytes[0], self.bytes[1], self.bytes[2], self.bytes[3]
+        )
     }
 }
-
 
 #[cfg(test)]
 mod tests {

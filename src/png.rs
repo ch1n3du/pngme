@@ -1,18 +1,17 @@
+use std::error::Error;
 use std::fmt;
 use std::fmt::{Display, Formatter};
-use std::error::Error;
 use std::io::{BufReader, Read};
 
 use crate::chunk::Chunk;
 use crate::chunk_type::ChunkType;
 
 pub struct Png {
-    chunks: Vec<Chunk>
+    chunks: Vec<Chunk>,
 }
 
 impl Png {
     const STANDARD_HEADER: [u8; 8] = [137, 80, 78, 71, 13, 10, 26, 10];
-
 
     pub fn from_chunks(chunks: Vec<Chunk>) -> Png {
         Png { chunks }
@@ -28,11 +27,11 @@ impl Png {
             .chunks
             .iter()
             .position(|c| c.chunk_type().to_string() == chunk_type)
-            {
-                Ok(self.chunks.remove(pos))
-            } else {
-                Err (ChunkNotFoundError { chunk_type })
-            }
+        {
+            Ok(self.chunks.remove(pos))
+        } else {
+            Err(ChunkNotFoundError { chunk_type })
+        }
     }
 
     pub fn header(&self) -> &[u8; 8] {
@@ -50,15 +49,16 @@ impl Png {
     }
 
     pub fn as_bytes(&self) -> Vec<u8> {
-        [&Png::STANDARD_HEADER, 
-        self.chunks()
-            .iter()
-            .flat_map(|c| c.as_bytes())
-            .collect::<Vec<u8>>()
-            .as_slice()
-        ].concat()
+        [
+            &Png::STANDARD_HEADER,
+            self.chunks()
+                .iter()
+                .flat_map(|c| c.as_bytes())
+                .collect::<Vec<u8>>()
+                .as_slice(),
+        ]
+        .concat()
     }
-
 }
 
 impl Display for Png {
@@ -73,11 +73,11 @@ impl Display for Png {
 
 #[derive(Debug)]
 pub struct PngDecodeError {
-    reason: String
+    reason: String,
 }
 
 impl PngDecodeError {
-    fn boxed(reason: String) ->  Box<Self> {
+    fn boxed(reason: String) -> Box<Self> {
         Box::new(Self { reason })
     }
 }
@@ -90,10 +90,9 @@ impl fmt::Display for PngDecodeError {
 
 impl Error for PngDecodeError {}
 
-
 #[derive(Debug)]
 pub struct ChunkNotFoundError {
-    chunk_type: String
+    chunk_type: String,
 }
 
 impl Error for ChunkNotFoundError {}
@@ -105,7 +104,7 @@ impl fmt::Display for ChunkNotFoundError {
 }
 
 impl TryFrom<&[u8]> for Png {
-    type  Error = Box<dyn std::error::Error>;
+    type Error = Box<dyn std::error::Error>;
 
     fn try_from(bytes: &[u8]) -> Result<Self, Self::Error> {
         let mut reader = BufReader::new(bytes);
@@ -135,19 +134,17 @@ impl TryFrom<&[u8]> for Png {
             let chunk = Chunk::try_from(all_bytes.as_slice())?;
             chunks.push(chunk);
         }
-        
+
         Ok(Png::from_chunks(chunks))
     }
-
 }
-
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::chunk::Chunk;
-    use std::str::FromStr;
     use std::convert::TryFrom;
+    use std::str::FromStr;
 
     fn testing_chunks() -> Vec<Chunk> {
         let mut chunks = Vec::new();
@@ -164,7 +161,10 @@ mod tests {
         Png::from_chunks(chunks)
     }
 
-    fn chunk_from_strings(chunk_type: &str, data: &str) -> Result<Chunk, Box<dyn std::error::Error>> {
+    fn chunk_from_strings(
+        chunk_type: &str,
+        data: &str,
+    ) -> Result<Chunk, Box<dyn std::error::Error>> {
         use std::str::FromStr;
 
         let chunk_type = ChunkType::from_str(chunk_type)?;
@@ -239,7 +239,6 @@ mod tests {
         assert!(png.is_err());
     }
 
-
     #[test]
     fn test_list_chunks() {
         let png = testing_png();
@@ -253,7 +252,6 @@ mod tests {
         let chunk = png.chunk_by_type("FrSt").unwrap();
         assert_eq!(&chunk.chunk_type().to_string(), "FrSt");
         assert_eq!(&chunk.data_as_string().unwrap(), "I am the first chunk");
-
     }
 
     #[test]
