@@ -42,7 +42,7 @@ impl Chunk {
         self.crc
     }
 
-    pub fn data_as_string(&self) -> crate::Result<String> {
+    pub fn data_as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         Ok(String::from_utf8(self.chunk_data.clone()).unwrap())
     }
 
@@ -88,7 +88,7 @@ impl Display for ChunkDecodingError {
 impl Error for ChunkDecodingError {}
 
 impl TryFrom<&[u8]> for Chunk {
-    type Error = crate::Error;
+    type Error = Box<dyn std::error::Error>;
     
     fn try_from(bytes: &[u8]) -> Result<Self, Self::Error> {
         let mut reader = BufReader::new(bytes);
