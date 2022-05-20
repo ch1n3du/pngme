@@ -1,9 +1,7 @@
 // Implementation of Chunk Type section of PNG spec[http://www.libpng.org/pub/png/spec/1.2/PNG-Structure.html]
 use std::convert::TryInto;
 use std::error::Error;
-use std::fmt;
-use std::fmt::Display;
-use std::str::from_utf8;
+use std::fmt::{self, Display};
 use std::str::FromStr;
 
 #[derive(PartialEq, Debug, Clone)]
@@ -61,10 +59,6 @@ impl ChunkType {
         self.bytes[3].is_ascii_lowercase()
     }
 
-    // // @notice: Returns String representation of ChunkType
-    pub fn to_string(&self) -> String {
-        String::from(from_utf8(&self.bytes).unwrap())
-    }
 }
 
 // @notice: Constructs a ChunkType instance from a 4 byte Array
@@ -81,12 +75,16 @@ impl FromStr for ChunkType {
     type Err = ChunkTypeErr;
 
     fn from_str(s: &str) -> Result<Self, ChunkTypeErr> {
+
         if s.chars().count() != 4 {
-            return Err(ChunkTypeErr::InvalidArgs);
+            Err(ChunkTypeErr::InvalidArgs)
+
         } else {
+
             let temp = ChunkType {
                 bytes: s.as_bytes().try_into().unwrap(),
             };
+
             match temp.bytes.iter().all(|c| c.is_ascii_alphabetic()) {
                 true => Ok(temp),
                 _ => Err(ChunkTypeErr::InvalidArgs),

@@ -1,5 +1,4 @@
-use crate::commands;
-use clap::{Args, Parser, Subcommand};
+use clap::{Parser, Subcommand};
 
 /// Pngme CLI
 #[derive(Debug, Parser)]

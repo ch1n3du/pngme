@@ -97,7 +97,7 @@ impl TryFrom<&[u8]> for Chunk {
         let mut reader = BufReader::new(bytes);
         let mut buff: [u8; 4] = [0; 4];
 
-        reader.read_exact(&mut buff);
+        reader.read_exact(&mut buff).unwrap();
         let length = u32::from_be_bytes(buff);
 
         if length > MAXIMUM_LENGTH {
@@ -110,9 +110,9 @@ impl TryFrom<&[u8]> for Chunk {
         let chunk_type = ChunkType::try_from(buff).unwrap();
 
         let mut chunk_data: Vec<u8> = vec![0; usize::try_from(length)?];
-        reader.read_exact(&mut chunk_data);
+        reader.read_exact(&mut chunk_data).unwrap();
 
-        reader.read_exact(&mut buff);
+        reader.read_exact(&mut buff).unwrap();
         let crc = u32::from_be_bytes(buff);
 
         let actual_crc =

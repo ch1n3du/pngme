@@ -5,14 +5,14 @@ use std::path::Path;
 use crate::args::CliCommand;
 use crate::chunk::Chunk;
 use crate::chunk_type::ChunkType;
-use crate::png::{ChunkNotFoundError, Png};
+use crate::png::{Png};
 
 fn get_png(file_path: &String) -> Result<Png, Box<dyn std::error::Error>> {
     let path = Path::new(file_path);
     let mut file = File::open(path)?;
 
     let mut buf: Vec<u8> = Vec::new();
-    file.read_to_end(&mut buf);
+    file.read_to_end(&mut buf).unwrap();
     let png = Png::try_from(buf.as_ref())?;
 
     Ok(png)
@@ -23,7 +23,7 @@ fn overwrite_file(file_path: &String, buf: &[u8]) -> Result<(), Error> {
         .truncate(true)
         .write(true)
         .open(Path::new(file_path))?;
-    file.write(buf);
+    file.write_all(buf).unwrap();
 
     Ok(())
 }
@@ -40,7 +40,7 @@ fn encode(command: CliCommand) -> Result<(), Box<dyn std::error::Error>> {
 
         let new_chunk = Chunk::new(
             ChunkType::new(chunk_type.as_bytes().try_into().unwrap()),
-            message.as_bytes().iter().copied().collect(),
+            message.as_bytes().to_vec(),
         );
         png.append_chunk(new_chunk);
         let buf = png.as_bytes();
@@ -79,8 +79,8 @@ fn remove(command: CliCommand) -> Result<(), Box<dyn std::error::Error>> {
     } = command
     {
         let mut png = get_png(&file_path)?;
-        png.remove_chunk(chunk_type.as_str());
-        overwrite_file(&file_path, png.as_bytes().as_ref());
+        png.remove_chunk(chunk_type.as_str()).unwrap();
+        overwrite_file(&file_path, png.as_bytes().as_ref()).unwrap();
 
         return Ok(());
     }
@@ -91,7 +91,7 @@ fn remove(command: CliCommand) -> Result<(), Box<dyn std::error::Error>> {
 fn print(command: CliCommand) -> Result<(), Box<dyn std::error::Error>> {
     if let CliCommand::Print { file_path } = command {
         let png = get_png(&file_path)?;
-        println!("{}", png.to_string());
+        println!("{}", png);
 
         return Ok(());
     }

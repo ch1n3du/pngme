@@ -4,7 +4,6 @@ use std::fmt::{Display, Formatter};
 use std::io::{BufReader, Read};
 
 use crate::chunk::Chunk;
-use crate::chunk_type::ChunkType;
 
 pub struct Png {
     chunks: Vec<Chunk>,
@@ -124,7 +123,7 @@ impl TryFrom<&[u8]> for Png {
         while let Ok(()) = reader.read_exact(&mut length_buffer) {
             let final_position = 4 + u32::from_be_bytes(length_buffer) + 4;
             let mut buffer = vec![0; usize::try_from(final_position)?];
-            reader.read_exact(&mut buffer);
+            reader.read_exact(&mut buffer).unwrap();
             let all_bytes: Vec<u8> = length_buffer
                 .iter()
                 .copied()
@@ -144,7 +143,7 @@ mod tests {
     use super::*;
     use crate::chunk::Chunk;
     use std::convert::TryFrom;
-    use std::str::FromStr;
+    use crate::chunk_type::ChunkType;
 
     fn testing_chunks() -> Vec<Chunk> {
         let mut chunks = Vec::new();
