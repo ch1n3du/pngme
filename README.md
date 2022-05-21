@@ -38,7 +38,6 @@ Note: It can take an optional argument, a file path for the ouput file to avoid 
 $ pngme encode input_file chunk_type message output_file
 ```
 
-<br>
 
 ### Decoding messages
 ```
