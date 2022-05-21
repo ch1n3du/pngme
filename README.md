@@ -46,10 +46,10 @@ $ pico_pngme decode input_file chunk_type
 
 ### Removing messages
 ```
-pico_pngme remove file_path chunk_type
+$ pico_pngme remove file_path chunk_type
 ```
 
 ### Printing messages
 ```
-pico_pngme print file_path
+$ pico_pngme print file_path
 ```
