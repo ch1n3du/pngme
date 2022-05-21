@@ -36,7 +36,7 @@ fn encode(command: CliCommand) -> Result<(), Box<dyn std::error::Error>> {
         output_file,
     } = command
     {
-        let mut png = get_png(&file_path).unwrap();
+        let mut png = get_png(&file_path).unwrap_or_else(|_| panic!("File {} not found", & file_path));
 
         let new_chunk = Chunk::new(
             ChunkType::new(chunk_type.as_bytes().try_into().unwrap()),
