@@ -15,7 +15,7 @@ This is an implementation of the [pngme](https://picklenerd.github.io/pngme_book
 
 
 ### Installing
-- Simply run `cargo install pngme`.
+- Simply run `cargo install pico_pngme`.
 
 
 ## Usage 
