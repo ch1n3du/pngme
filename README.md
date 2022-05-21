@@ -3,13 +3,12 @@
 A simple  to use CLI for  encoding secret messages inside of images.
 
 ## Description 
-___
+
 A simple  to use CLI for  encoding secret messages inside of images.
 This is an implementation of the [pngme](https://picklenerd.github.io/pngme_book/) rust book.
 
 
 ## Getting Started
-___
 
 ### Dependecies
 - Install the [rustup](https://rustup.rs/) toolchain.
