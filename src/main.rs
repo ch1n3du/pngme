@@ -1,6 +1,6 @@
 use clap::StructOpt;
-use pngme::args::Cli;
-use pngme::commands::execute_command;
+use pico_pngme::args::Cli;
+use pico_pngme::commands::execute_command;
 
 fn main() {
     let args = Cli::parse();

@@ -1,5 +1,5 @@
 [package]
-name = "pico-pngme"
+name = "pico_pngme"
 version = "0.1.0"
 edition = "2021"
 description = "A CLI tool for hiding messages in PNG files."
