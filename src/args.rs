@@ -18,8 +18,6 @@ pub enum CliCommand {
         #[clap(required = true)]
         file_path: String,
         #[clap(required = true)]
-        chunk_type: String,
-        #[clap(required = true)]
         message: String,
         #[clap(required = false)]
         output_file: Option<String>,
@@ -29,16 +27,12 @@ pub enum CliCommand {
     Decode {
         #[clap(required = true)]
         file_path: String,
-        #[clap(required = true)]
-        chunk_type: String,
     },
     /// Remove message of chunk_type from png at file_path
     #[clap(arg_required_else_help = true)]
     Remove {
         #[clap(required = true)]
         file_path: String,
-        #[clap(required = true)]
-        chunk_type: String,
     },
     #[clap(arg_required_else_help = true)]
     Print {

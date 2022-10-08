@@ -4,7 +4,6 @@ use std::fmt::{Display, Formatter};
 use std::io::{BufReader, Read};
 
 use crate::chunk::Chunk;
-
 pub struct Png {
     chunks: Vec<Chunk>,
 }
@@ -142,8 +141,8 @@ impl TryFrom<&[u8]> for Png {
 mod tests {
     use super::*;
     use crate::chunk::Chunk;
-    use std::convert::TryFrom;
     use crate::chunk_type::ChunkType;
+    use std::convert::TryFrom;
 
     fn testing_chunks() -> Vec<Chunk> {
         let mut chunks = Vec::new();
